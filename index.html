@@ -1,1 +1,711 @@
-FULL_CONTENT_FROM_FILE
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capital Capers - ¡La Carrera Familiar Más Divertida!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Fredoka+One&family=Baloo+2:wght@500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  min-height: 100vh;
+  color: #2d3436;
+  overflow-x: hidden;
+}
+.container { max-width: 1300px; margin: 0 auto; padding: 15px; }
+header {
+  text-align: center;
+  padding: 25px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 25px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2.5em, 6vw, 4em);
+  background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #1dd1a1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow 4s ease infinite;
+}
+@keyframes rainbow {
+  0%,100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(30deg); }
+}
+.subtitle { color: #636e72; font-size: 1.3em; margin-top: 8px; font-weight: 700; }
+#game-area {
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  padding: 20px;
+  position: relative;
+}
+canvas {
+  border-radius: 20px;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  background: linear-gradient(180deg, #dff9fb 0%, #c7ecee 100%);
+  max-width: 100%;
+  height: auto;
+}
+.controls, .modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 18px;
+}
+button {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.15em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+button:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
+button:active { transform: translateY(1px); }
+.btn-primary { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; }
+.btn-secondary { background: linear-gradient(135deg, #48dbfb, #0abde3); color: white; }
+.btn-success { background: linear-gradient(135deg, #1dd1a1, #10ac84); color: white; }
+.btn-warning { background: linear-gradient(135deg, #feca57, #ff9f43); color: #2d3436; }
+.btn-mode { background: linear-gradient(135deg, #a29bfe, #6c5ce7); color: white; min-width: 180px; }
+#status {
+  text-align: center;
+  font-size: 1.25em;
+  font-weight: 800;
+  margin: 12px 0;
+  padding: 16px;
+  background: linear-gradient(135deg, #fff9e6, #fff3cd);
+  border-radius: 18px;
+  border-left: 6px solid #feca57;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.player-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 15px;
+}
+.player-card {
+  background: white;
+  padding: 12px 18px;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  min-width: 160px;
+  text-align: center;
+  border: 4px solid #dfe6e9;
+  transition: all 0.3s;
+}
+.player-card.active {
+  border-color: #ff6b6b;
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(255,107,107,0.3);
+}
+.money { color: #10ac84; font-weight: 900; font-size: 1.3em; }
+.dice {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  font-size: 2em;
+  line-height: 50px;
+  text-align: center;
+  margin: 0 5px;
+  animation: bounce 0.5s;
+}
+@keyframes bounce { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+footer {
+  text-align: center;
+  margin-top: 25px;
+  color: #2d3436;
+  font-size: 0.95em;
+  opacity: 0.8;
+}
+.choice-buttons { display: flex; gap: 10px; justify-content: center; margin: 10px 0; flex-wrap: wrap; }
+.mini-challenge {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  z-index: 1000;
+  text-align: center;
+  display: none;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Capital Capers</h1>
+    <p class="subtitle">¡La carrera más loca y colorida por las capitales de Europa!</p>
+  </header>
+  
+  <div id="game-area">
+    <div id="status">¡Elige un modo de juego y comienza la diversión familiar!</div>
+    <canvas id="board" width="1100" height="600"></canvas>
+    <div class="modes" id="modeSelect">
+      <button class="btn-mode" onclick="startMode('classic')">Modo Clásico</button>
+      <button class="btn-mode" onclick="startMode('chaos')">Modo Caos</button>
+      <button class="btn-mode" onclick="startMode('solo')">Solo vs IA</button>
+      <button class="btn-mode" onclick="startMode('coop')">Cooperativo vs Chaser</button>
+    </div>
+    <div class="controls" id="gameControls" style="display:none;">
+      <button id="btnRoll" class="btn-success">Tirar Dados</button>
+      <button id="btnCard" class="btn-warning" disabled>Usar Carta</button>
+      <button id="btnBuy" class="btn-secondary" disabled>Comprar Edificio</button>
+      <button id="btnNext" class="btn-secondary" disabled>Siguiente Turno</button>
+      <button id="btnMenu" class="btn-primary">Volver al Menú</button>
+    </div>
+    <div id="choiceArea" class="choice-buttons" style="display:none;"></div>
+    <div id="players" class="player-info"></div>
+  </div>
+  
+  <div id="miniChallenge" class="mini-challenge">
+    <h3 id="challengeTitle">¡Mini-Reto!</h3>
+    <p id="challengeText">Pulsa el botón antes de que se acabe el tiempo</p>
+    <button id="challengeBtn" class="btn-success">¡Pulsa!</button>
+    <div id="challengeTimer">3</div>
+  </div>
+  
+  <footer>
+    Juego 100% original · Familia · Diversión · Propiedades · Mini-retos · Más ramificaciones<br>
+    Hecho con ❤️ para jugar juntos
+  </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+const playersEl = document.getElementById('players');
+const modeSelect = document.getElementById('modeSelect');
+const gameControls = document.getElementById('gameControls');
+const choiceArea = document.getElementById('choiceArea');
+const miniChallenge = document.getElementById('miniChallenge');
+
+let players = [];
+let currentPlayer = 0;
+let diceValue = 0;
+let gameStarted = false;
+let stage = 1;
+let targetCapital = null;
+let chaserOn = null;
+let gameMode = 'classic';
+let pendingChoice = null;
+let audioCtx = null;
+let particles = [];
+let challengeActive = false;
+
+const capitals = ['París', 'Berlín', 'Roma', 'Madrid', 'Londres', 'Viena', 'Ámsterdam', 'Praga', 'Lisboa'];
+const colors = ['#ff6b6b', '#48dbfb', '#1dd1a1', '#feca57', '#ff9ff3', '#5f27cd', '#00d2d3', '#ff9f43'];
+const cardEffects = [
+  {name: 'Doble Dado', desc: 'Tira 2 veces', effect: 'double'},
+  {name: 'Roba Dinero', desc: '+100 monedas', effect: 'money'},
+  {name: 'Salta Casillas', desc: 'Avanza 3 extra', effect: 'skip'},
+  {name: 'Intercambia', desc: 'Cambia posición', effect: 'swap'},
+  {name: 'Escudo', desc: 'Inmune al Chaser', effect: 'shield'},
+  {name: 'Caos', desc: 'Todos pierden $30', effect: 'chaos'},
+  {name: 'Turbo', desc: 'Próximo dado +2', effect: 'turbo'},
+  {name: 'Renta Extra', desc: '+50 por edificio', effect: 'rent'}
+];
+
+const nodes = [
+  {id:0, x:80, y:300, name:'Inicio', color:'#dfe6e9', type:'start'},
+  {id:1, x:180, y:200, name:'', color:'#74b9ff', type:'blue'},
+  {id:2, x:280, y:120, name:'', color:'#ffeaa7', type:'yellow', choices:[3,4]},
+  {id:3, x:380, y:180, name:'París', color:'#ffffff', type:'city', owner: null, buildings: 0},
+  {id:4, x:480, y:100, name:'', color:'#ff7675', type:'red'},
+  {id:5, x:580, y:200, name:'Berlín', color:'#ffffff', type:'city', owner: null, buildings: 0, choices:[6,7]},
+  {id:6, x:680, y:140, name:'', color:'#55efc4', type:'green'},
+  {id:7, x:780, y:220, name:'Roma', color:'#ffffff', type:'city', owner: null, buildings: 0},
+  {id:8, x:880, y:150, name:'', color:'#a29bfe', type:'purple', choices:[9,10]},
+  {id:9, x:980, y:250, name:'Madrid', color:'#ffffff', type:'city', owner: null, buildings: 0},
+  {id:10, x:1000, y:380, name:'', color:'#fd79a8', type:'pink'},
+  {id:11, x:900, y:480, name:'Londres', color:'#ffffff', type:'city', owner: null, buildings: 0},
+  {id:12, x:750, y:520, name:'', color:'#74b9ff', type:'blue'},
+  {id:13, x:550, y:480, name:'Viena', color:'#ffffff', type:'city', owner: null, buildings: 0},
+  {id:14, x:350, y:500, name:'', color:'#ffeaa7', type:'yellow'},
+  {id:15, x:150, y:420, name:'Meta', color:'#fdcb6e', type:'end'}
+];
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+function playSound(freq = 440, duration = 0.1, type = 'sine') {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function spawnParticles(x, y, color) {
+  for(let i=0; i<12; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random()-0.5)*8,
+      vy: (Math.random()-0.5)*8 - 2,
+      life: 30,
+      color
+    });
+  }
+}
+
+function updateParticles() {
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.2;
+    p.life--;
+  });
+}
+
+function drawBoard() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const sky = ctx.createLinearGradient(0,0,0,canvas.height);
+  sky.addColorStop(0, '#81ecec');
+  sky.addColorStop(0.6, '#dfe6e9');
+  sky.addColorStop(1, '#b2bec3');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  drawCloud(150, 60, 40);
+  drawCloud(400, 40, 50);
+  drawCloud(700, 70, 35);
+  drawCloud(950, 50, 45);
+  
+  ctx.strokeStyle = '#636e72';
+  ctx.lineWidth = 18;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  for(let i=0; i<nodes.length-1; i++) {
+    ctx.moveTo(nodes[i].x, nodes[i].y);
+    ctx.lineTo(nodes[i+1].x, nodes[i+1].y);
+  }
+  ctx.stroke();
+  
+  ctx.strokeStyle = '#ffeaa7';
+  ctx.lineWidth = 4;
+  ctx.setLineDash([15, 10]);
+  ctx.beginPath();
+  for(let i=0; i<nodes.length-1; i++) {
+    ctx.moveTo(nodes[i].x, nodes[i].y);
+    ctx.lineTo(nodes[i+1].x, nodes[i+1].y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  nodes.forEach(n => {
+    ctx.beginPath();
+    ctx.arc(n.x + 3, n.y + 3, n.type === 'city' ? 32 : 26, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.type === 'city' ? 30 : 24, 0, Math.PI*2);
+    ctx.fillStyle = n.color;
+    ctx.fill();
+    ctx.strokeStyle = '#2d3436';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    if(n.type === 'city') {
+      ctx.fillStyle = '#2d3436';
+      ctx.font = 'bold 11px Nunito';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.name, n.x, n.y + 48);
+      ctx.font = '16px serif';
+      ctx.fillText('🏛️', n.x, n.y + 5);
+      if(n.buildings > 0) {
+        ctx.font = '12px serif';
+        ctx.fillText('🏢'.repeat(Math.min(n.buildings, 3)), n.x, n.y - 15);
+      }
+    } else if(n.type === 'start') {
+      ctx.font = '18px serif';
+      ctx.fillText('🏁', n.x, n.y + 6);
+    } else if(n.type === 'end') {
+      ctx.font = '18px serif';
+      ctx.fillText('🏆', n.x, n.y + 6);
+    }
+    if(n.choices) {
+      ctx.fillStyle = '#e17055';
+      ctx.beginPath();
+      ctx.arc(n.x, n.y - 20, 8, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  
+  players.forEach((p, i) => {
+    const node = nodes[Math.min(p.position, nodes.length-1)];
+    const offsetX = (i - (players.length-1)/2) * 18;
+    const offsetY = -35;
+    drawCar(node.x + offsetX, node.y + offsetY, p.color, p.name[0], p.isAI);
+  });
+  
+  if(chaserOn !== null && players[chaserOn]) {
+    const node = nodes[Math.min(players[chaserOn].position, nodes.length-1)];
+    ctx.font = '28px serif';
+    ctx.fillText('😈', node.x + 20, node.y - 50);
+  }
+  
+  particles.forEach(p => {
+    ctx.globalAlpha = p.life / 30;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+  updateParticles();
+  if(particles.length > 0) requestAnimationFrame(drawBoard);
+}
+
+function drawCloud(x, y, size) {
+  ctx.beginPath();
+  ctx.arc(x, y, size, 0, Math.PI*2);
+  ctx.arc(x + size*0.7, y - size*0.2, size*0.8, 0, Math.PI*2);
+  ctx.arc(x + size*1.3, y, size*0.7, 0, Math.PI*2);
+  ctx.fill();
+}
+
+function drawCar(x, y, color, letter, isAI) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.roundRect(-14, -8, 28, 16, 6);
+  ctx.fill();
+  ctx.strokeStyle = '#2d3436';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#2d3436';
+  ctx.beginPath();
+  ctx.arc(-8, 6, 5, 0, Math.PI*2);
+  ctx.arc(8, 6, 5, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 11px Nunito';
+  ctx.textAlign = 'center';
+  ctx.fillText(letter, 0, 2);
+  if(isAI) {
+    ctx.fillStyle = '#2d3436';
+    ctx.font = '10px Nunito';
+    ctx.fillText('IA', 0, -12);
+  }
+  ctx.restore();
+}
+
+function updatePlayersUI() {
+  playersEl.innerHTML = '';
+  players.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'player-card' + (i === currentPlayer ? ' active' : '');
+    card.style.borderColor = p.color;
+    const cardsCount = p.cards ? p.cards.length : 0;
+    const buildings = nodes.filter(n => n.owner === i).reduce((sum, n) => sum + (n.buildings||0), 0);
+    card.innerHTML = `<strong>${p.name}${p.isAI ? ' (IA)' : ''}</strong><br><span class="money">$${p.money}</span><br>Pos: ${p.position}<br>Cartas: ${cardsCount}<br>Edificios: ${buildings}`;
+    playersEl.appendChild(card);
+  });
+}
+
+function startMode(mode) {
+  gameMode = mode;
+  modeSelect.style.display = 'none';
+  gameControls.style.display = 'flex';
+  initAudio();
+  playSound(523, 0.2);
+  
+  nodes.forEach(n => { if(n.type === 'city') { n.owner = null; n.buildings = 0; } });
+  
+  let num = 2;
+  if(mode === 'solo') {
+    players = [
+      {name: 'Tú', money: 1000, position: 0, color: colors[0], cards: [], shield: false, isAI: false, turbo: 0},
+      {name: 'Racer IA', money: 1000, position: 0, color: colors[1], cards: [], shield: false, isAI: true, turbo: 0}
+    ];
+  } else if(mode === 'coop') {
+    num = parseInt(prompt('¿Cuántos jugadores humanos? (2-4)', '2')) || 2;
+    players = [];
+    for(let i=0; i<Math.min(Math.max(num,2),4); i++) {
+      const name = prompt(`Nombre del jugador ${i+1}`, `Jugador ${i+1}`) || `Jugador ${i+1}`;
+      players.push({name, money: 1200, position: 0, color: colors[i], cards: [], shield: false, isAI: false, turbo: 0});
+    }
+  } else {
+    num = parseInt(prompt('¿Cuántos jugadores? (2-6)', '4')) || 4;
+    players = [];
+    for(let i=0; i<Math.min(Math.max(num,2),6); i++) {
+      const name = prompt(`Nombre del jugador ${i+1}`, `Jugador ${i+1}`) || `Jugador ${i+1}`;
+      players.push({name, money: 1000, position: 0, color: colors[i], cards: [], shield: false, isAI: false, turbo: 0});
+    }
+  }
+  
+  gameStarted = true;
+  currentPlayer = 0;
+  stage = 1;
+  targetCapital = capitals[Math.floor(Math.random()*capitals.length)];
+  chaserOn = null;
+  statusEl.innerHTML = `Modo <strong>${mode.toUpperCase()}</strong> · Etapa ${stage} · Objetivo: <strong>${targetCapital}</strong><br>Turno de ${players[0].name}`;
+  drawBoard();
+  updatePlayersUI();
+  if(players[0].isAI) setTimeout(aiTurn, 800);
+}
+
+function rollDice() {
+  if(!gameStarted || players[currentPlayer].isAI || challengeActive) return;
+  initAudio();
+  playSound(660, 0.15);
+  let bonus = players[currentPlayer].turbo || 0;
+  diceValue = Math.floor(Math.random()*6) + 1 + bonus;
+  if(bonus) players[currentPlayer].turbo = 0;
+  statusEl.innerHTML = `${players[currentPlayer].name} sacó un <span class="dice">${diceValue}</span>!`;
+  document.getElementById('btnRoll').disabled = true;
+  document.getElementById('btnNext').disabled = false;
+  setTimeout(() => movePlayer(diceValue), 600);
+}
+
+function movePlayer(steps) {
+  const p = players[currentPlayer];
+  let targetPos = Math.min(p.position + steps, nodes.length - 1);
+  
+  const currentNode = nodes[p.position];
+  if(currentNode.choices && steps > 0) {
+    pendingChoice = {steps, from: p.position};
+    showChoices(currentNode.choices);
+    return;
+  }
+  
+  p.position = targetPos;
+  applyLandingEffects(p);
+  drawBoard();
+  updatePlayersUI();
+  
+  if(p.isAI) setTimeout(aiTurn, 1000);
+}
+
+function showChoices(choices) {
+  choiceArea.style.display = 'flex';
+  choiceArea.innerHTML = '';
+  choices.forEach(cid => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-secondary';
+    btn.textContent = nodes[cid].name || 'Ruta ' + cid;
+    btn.onclick = () => choosePath(cid);
+    choiceArea.appendChild(btn);
+  });
+  statusEl.textContent = '¡Elige una ruta!';
+}
+
+function choosePath(nodeId) {
+  choiceArea.style.display = 'none';
+  const p = players[currentPlayer];
+  p.position = nodeId;
+  applyLandingEffects(p);
+  drawBoard();
+  updatePlayersUI();
+  document.getElementById('btnNext').disabled = false;
+}
+
+function applyLandingEffects(p) {
+  const node = nodes[p.position];
+  let msg = '';
+  if(node.type === 'blue') { p.money += 60; msg = ' +$60 (azul)'; spawnParticles(node.x, node.y, '#74b9ff'); }
+  else if(node.type === 'red') { p.money = Math.max(0, p.money - 40); msg = ' -$40 (roja)'; }
+  else if(node.type === 'yellow') {
+    const card = cardEffects[Math.floor(Math.random()*cardEffects.length)];
+    p.cards.push(card);
+    msg = ` ¡Carta: ${card.name}!`;
+    document.getElementById('btnCard').disabled = false;
+    playSound(880, 0.2);
+    spawnParticles(node.x, node.y, '#ffeaa7');
+  } else if(node.type === 'green') { p.money += 30; }
+  else if(node.type === 'city') { 
+    p.money += 100; 
+    msg = ' +$100 (ciudad)'; 
+    playSound(523, 0.3); 
+    spawnParticles(node.x, node.y, '#ffffff');
+    if(p.money >= 150 && node.buildings < 3) document.getElementById('btnBuy').disabled = false;
+    if(Math.random() < 0.4 && !p.isAI) startMiniChallenge(p);
+  } else if(node.type === 'pink' && gameMode === 'chaos') { p.money += Math.floor(Math.random()*100)-30; msg = ' ¡Caos!'; }
+  
+  nodes.forEach(n => {
+    if(n.type === 'city' && n.owner !== null && n.buildings > 0) {
+      players[n.owner].money += n.buildings * 15;
+    }
+  });
+  
+  if(stage > 1 && chaserOn === null && gameMode !== 'coop') {
+    let minPos = Math.min(...players.map(pl => pl.position));
+    chaserOn = players.findIndex(pl => pl.position === minPos);
+  }
+  if(chaserOn === currentPlayer && !p.shield && gameMode !== 'coop') {
+    p.money = Math.max(0, p.money - 50);
+    msg += ' ¡Chaser -$50!';
+    playSound(200, 0.3, 'sawtooth');
+  }
+  if(gameMode === 'coop' && Math.random() < 0.3) {
+    players.forEach(pl => pl.money = Math.max(0, pl.money - 20));
+    msg += ' ¡El Chaser ataca a todos!';
+  }
+  
+  statusEl.textContent = (statusEl.textContent || '') + msg;
+}
+
+function startMiniChallenge(p) {
+  challengeActive = true;
+  miniChallenge.style.display = 'block';
+  let time = 3;
+  document.getElementById('challengeTimer').textContent = time;
+  const interval = setInterval(() => {
+    time--;
+    document.getElementById('challengeTimer').textContent = time;
+    if(time <= 0) {
+      clearInterval(interval);
+      endChallenge(false, p);
+    }
+  }, 1000);
+  document.getElementById('challengeBtn').onclick = () => {
+    clearInterval(interval);
+    endChallenge(true, p);
+  };
+}
+
+function endChallenge(success, p) {
+  miniChallenge.style.display = 'none';
+  challengeActive = false;
+  if(success) {
+    p.money += 80;
+    statusEl.textContent += ' ¡Mini-reto superado! +$80';
+    playSound(1046, 0.3);
+    spawnParticles(nodes[p.position].x, nodes[p.position].y, '#1dd1a1');
+  } else {
+    statusEl.textContent += ' Mini-reto fallido';
+  }
+  updatePlayersUI();
+}
+
+function buyBuilding() {
+  const p = players[currentPlayer];
+  const node = nodes[p.position];
+  if(node.type !== 'city' || p.money < 150 || node.buildings >= 3) return;
+  p.money -= 150;
+  node.buildings++;
+  node.owner = currentPlayer;
+  statusEl.textContent = `${p.name} compró un edificio en ${node.name}!`;
+  playSound(659, 0.2);
+  document.getElementById('btnBuy').disabled = true;
+  drawBoard();
+  updatePlayersUI();
+}
+
+function useCard() {
+  const p = players[currentPlayer];
+  if(p.cards.length === 0) return;
+  const card = p.cards.pop();
+  playSound(784, 0.15);
+  if(card.effect === 'money') p.money += 100;
+  else if(card.effect === 'skip') p.position = Math.min(p.position + 3, nodes.length-1);
+  else if(card.effect === 'shield') p.shield = true;
+  else if(card.effect === 'double' || card.effect === 'turbo') p.turbo = 2;
+  else if(card.effect === 'chaos') players.forEach(pl => pl.money = Math.max(0, pl.money - 30));
+  else if(card.effect === 'swap' && players.length > 1) {
+    const other = (currentPlayer + 1) % players.length;
+    [p.position, players[other].position] = [players[other].position, p.position];
+  } else if(card.effect === 'rent') {
+    nodes.forEach(n => { if(n.owner === currentPlayer) p.money += 50; });
+  }
+  statusEl.textContent = `${p.name} usó ${card.name}!`;
+  document.getElementById('btnCard').disabled = p.cards.length === 0;
+  drawBoard();
+  updatePlayersUI();
+}
+
+function nextTurn() {
+  currentPlayer = (currentPlayer + 1) % players.length;
+  document.getElementById('btnRoll').disabled = false;
+  document.getElementById('btnNext').disabled = true;
+  document.getElementById('btnCard').disabled = players[currentPlayer].cards.length === 0;
+  document.getElementById('btnBuy').disabled = true;
+  statusEl.textContent = `Turno de ${players[currentPlayer].name}. ¡Tira los dados!`;
+  
+  if(players.some(p => p.position >= nodes.length-1)) {
+    const winner = players.reduce((a,b) => a.money > b.money ? a : b);
+    statusEl.innerHTML = `¡${winner.name} gana la etapa con $${winner.money}! Nueva etapa...`;
+    stage++;
+    players.forEach(p => { p.position = 0; p.shield = false; p.turbo = 0; });
+    targetCapital = capitals[Math.floor(Math.random()*capitals.length)];
+    chaserOn = null;
+    playSound(1046, 0.4);
+    setTimeout(() => {
+      statusEl.innerHTML = `¡Etapa ${stage}! Objetivo: <strong>${targetCapital}</strong>`;
+      drawBoard();
+    }, 1500);
+  }
+  drawBoard();
+  updatePlayersUI();
+  if(players[currentPlayer].isAI) setTimeout(aiTurn, 800);
+}
+
+function aiTurn() {
+  if(!players[currentPlayer].isAI) return;
+  const p = players[currentPlayer];
+  diceValue = Math.floor(Math.random()*6) + 1 + (p.turbo || 0);
+  p.turbo = 0;
+  statusEl.innerHTML = `${p.name} (IA) sacó un <span class="dice">${diceValue}</span>!`;
+  setTimeout(() => {
+    movePlayer(diceValue);
+    const node = nodes[p.position];
+    if(node.type === 'city' && p.money >= 150 && node.buildings < 2 && Math.random() > 0.4) {
+      p.money -= 150;
+      node.buildings++;
+      node.owner = currentPlayer;
+    }
+    setTimeout(nextTurn, 1200);
+  }, 700);
+}
+
+document.getElementById('btnRoll').onclick = rollDice;
+document.getElementById('btnNext').onclick = nextTurn;
+document.getElementById('btnCard').onclick = useCard;
+document.getElementById('btnBuy').onclick = buyBuilding;
+document.getElementById('btnMenu').onclick = () => {
+  gameStarted = false;
+  modeSelect.style.display = 'flex';
+  gameControls.style.display = 'none';
+  choiceArea.style.display = 'none';
+  miniChallenge.style.display = 'none';
+  statusEl.textContent = '¡Elige un modo de juego!';
+  players = [];
+  updatePlayersUI();
+  drawBoard();
+};
+
+drawBoard();
+</script>
+</body>
+</html>

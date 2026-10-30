@@ -2,45 +2,34 @@
 
 ¡La carrera familiar más divertida y colorida por las capitales de Europa!
 
-Un juego web moderno, original y 100% libre de copyright. Inspirado en el espíritu de los clásicos de mesa de carreras locas, pero con mecánicas, gráficos y personajes completamente nuevos.
+Un juego web moderno, original y 100% libre de copyright. Con múltiples modos de juego, mecánicas novedosas y gráficos alegres.
 
-## Características Mejoradas
+## Nuevos modos y mecánicas
 
-- **Gráficos hermosos y modernos**: Cielo con nubes, carreteras con líneas, coches cute como fichas, sombras, animaciones suaves y tipografías alegres.
-- **Familiar y divertido**: Ideal para 2-6 jugadores en modo hotseat. Perfecto para familia y amigos.
-- **Mecánicas ricas**:
-  - Dados animados
-  - Casillas de colores con efectos (dinero, cartas)
-  - Sistema de cartas de eventos
-  - Ciudades que dan bonus
-  - **El Chaser** (personaje original travieso que persigue al que va más atrasado)
-  - Etapas múltiples hacia diferentes capitales
-- **UI moderna**: Tarjetas de jugadores interactivas, botones con gradientes, responsive.
-- **100% original**: Sin uso de nombres, gráficos o código de juegos existentes.
+- **Modo Clásico**: La carrera tradicional por etapas.
+- **Modo Caos**: Más eventos aleatorios y efectos impredecibles.
+- **Solo vs IA**: Juega contra un oponente inteligente.
+- **Cooperativo vs Chaser**: Todos los jugadores unen fuerzas contra el Chaser travieso.
+- **Rutas con elección**: En algunos puntos del mapa puedes elegir el camino.
+- **Cartas nuevas**: Caos, Turbo, Intercambia, Escudo, etc.
+- **Efectos de sonido**: Feedback sonoro simple y agradable.
+- **El Chaser** más activo según el modo.
+- **Bonus de ciudades, dinero y eventos globales**.
 
 ## Cómo jugar
 
-1. Abre `index.html` en cualquier navegador moderno.
-2. Configura el número de jugadores y sus nombres.
-3. Tira los dados en tu turno.
-4. Avanza, gana dinero, recoge cartas y evita al Chaser.
-5. El que tenga más dinero al final de las etapas gana.
-
-## Próximas ideas
-
-- Multijugador online
-- Más ramificaciones en el mapa
-- Propiedades y edificios
-- Sonidos y música
-- Más animaciones y efectos visuales
-- Modo solo vs IA
+1. Abre `index.html` en el navegador (o usa GitHub Pages).
+2. Elige un modo.
+3. Configura jugadores (si aplica).
+4. Tira dados, elige rutas, usa cartas y evita (o coopera contra) el Chaser.
+5. El que tenga más dinero al final gana.
 
 ## Tecnologías
 
-- HTML5 Canvas (gráficos procedurales hermosos)
-- CSS3 moderno con animaciones
+- HTML5 Canvas
+- CSS3 moderno
 - JavaScript vanilla
-- Google Fonts
+- Web Audio API (sonidos)
 
 ## Licencia
 

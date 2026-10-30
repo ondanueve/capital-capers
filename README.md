@@ -2,34 +2,33 @@
 
 ¡La carrera familiar más divertida y colorida por las capitales de Europa!
 
-Un juego web moderno, original y 100% libre de copyright. Con múltiples modos de juego, mecánicas novedosas y gráficos alegres.
+Un juego web moderno, original y 100% libre de copyright. Con múltiples modos, propiedades, mini-retos, ramificaciones y animaciones.
 
-## Nuevos modos y mecánicas
+## Nuevas features
 
-- **Modo Clásico**: La carrera tradicional por etapas.
-- **Modo Caos**: Más eventos aleatorios y efectos impredecibles.
-- **Solo vs IA**: Juega contra un oponente inteligente.
-- **Cooperativo vs Chaser**: Todos los jugadores unen fuerzas contra el Chaser travieso.
-- **Rutas con elección**: En algunos puntos del mapa puedes elegir el camino.
-- **Cartas nuevas**: Caos, Turbo, Intercambia, Escudo, etc.
-- **Efectos de sonido**: Feedback sonoro simple y agradable.
-- **El Chaser** más activo según el modo.
-- **Bonus de ciudades, dinero y eventos globales**.
+- **Sistema de propiedades y edificios**: En las ciudades puedes comprar edificios (hasta 3) que generan renta pasiva cada turno.
+- **Mini-retos**: Al aterrizar en ciudades hay chance de un mini-reto de reacción (+$80 si ganas).
+- **Más ramificaciones**: Más puntos de elección de ruta en el mapa.
+- **Partículas y animaciones**: Efectos visuales al ganar dinero, cartas o superar retos.
+- **IA más inteligente**: La IA compra edificios cuando le conviene.
+- **Modos**: Clásico, Caos, Solo vs IA, Cooperativo vs Chaser.
+- **Cartas nuevas**: Renta Extra, Turbo, Caos, etc.
+- **Sonidos** y feedback visual mejorado.
 
 ## Cómo jugar
 
-1. Abre `index.html` en el navegador (o usa GitHub Pages).
-2. Elige un modo.
-3. Configura jugadores (si aplica).
-4. Tira dados, elige rutas, usa cartas y evita (o coopera contra) el Chaser.
-5. El que tenga más dinero al final gana.
+1. Abre `index.html` (o GitHub Pages).
+2. Elige modo.
+3. Configura jugadores.
+4. Tira dados, elige rutas, compra edificios, usa cartas, supera mini-retos y evita al Chaser.
+5. El que tenga más dinero gana.
 
 ## Tecnologías
 
-- HTML5 Canvas
+- HTML5 Canvas + partículas
 - CSS3 moderno
 - JavaScript vanilla
-- Web Audio API (sonidos)
+- Web Audio API
 
 ## Licencia
 
@@ -37,4 +36,4 @@ MIT - ¡Mejora, comparte y diviértete!
 
 ---
 
-Hecho con amor para que las familias se rían juntas. 🚗💨🏛️
+Hecho con amor para que las familias se rían juntas. 🚗💨🏛️🏢
